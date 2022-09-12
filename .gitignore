@@ -1,0 +1,10 @@
+# dont track devspace caches
+*/.devspace
+
+.DS_Store
+
+# jetbrains
+.idea
+
+# vscode
+.vscode
