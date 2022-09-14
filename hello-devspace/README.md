@@ -88,16 +88,11 @@ build this image and push it somewhere, but now we can let DevSpace handle that 
 
 As for the pushing the image to *somewhere* thing -- you do need to be able to get this image to somewhere your 
 cluster can pull it from. If you are doing development locally on Minikube/Docker Desktop/something similar, you may 
-be able to simply build the image and have it be accessible from the cluster. For that situation you can ignore 
-the next paragraph and move ahead!
-
-If you are *not* using Minikube/Docker Desktop/something similar and need to be able to push the image(s) to an 
-accessible repository, you will need to first have access to said repository! We will also need to update our 
-manifest and `devspace.yaml` files to set the appropriate registry URL for our image references. To make this easy on 
-you, you can simply run `make set_registry` from this directory. This will prompt you for your registry URL and 
-update the `manifests/deployment.yaml` image field and the REGISTRY variable field in the `devspace.yaml` file. 
-(We'll talk about the `devspace.yaml` file more briefly, so for now, just know we do need to have a pushable 
-registry set and this is taking care of that!) 
+be able to simply build the image and have it be accessible from the cluster. But, what if you are doing development 
+on a remote cluster or a cluster spun up with k3d or similar? Well, we've got great news for you! Starting in 
+DevSpace 6.2.0, DevSpace will automatically spin up a registry adjacent to your pods that the parent Kubernetes 
+cluster will be able to pull images from! If for some reason you want to build/push to a different registry, check 
+out the next "simple-project" example where we'll show you how to do that as well.
 
 The only thing left to do is to deploy our application into a Kubernetes cluster. In this case there is a very 
 simple `deployment.yaml` manifest to do just that. This manifest will create a simple deployment, deploying a single 
@@ -176,7 +171,7 @@ This `devspace.yaml`, has four major sections that pretty much all your `devspac
    case we simply refer to the Kubernetes manifests in the `manifests` directory.
 
 
-4. `dev`: DevSpace, as the name would imply, is about helping you develop faster/easier in Kubernets -- the `dev` 
+4. `dev`: DevSpace, as the name would imply, is about helping you develop faster/easier in Kubernetes -- the `dev` 
    section is where we tell DevSpace how to help us do just that. In this example we have four important fields here:
 
     1. `imageSelector`: this field needs to match the image of a container in our deployment -- it tells DevSpace 
@@ -367,8 +362,7 @@ Now that you've probably finished adding the really cool feature that you were w
 DevSpace makes tidying up the resources you deployed a breeze. Simply running `devspace purge` will remove any 
 deployment objects deployed via DevSpace:
 
-
-```python
+```shell
 $ devspace purge
 info Using namespace 'python-hello-devspace'
 info Using kube context 'loft-vcluster_devspace-dev_devspace-dev_loft-cluster'
@@ -380,3 +374,71 @@ purge:hello-devspace Successfully deleted deployment hello-devspace
 
 And with that you've got the basics of DevSpace down. In the other examples we'll focus more on some DevSpace/Python 
 specifics, and how you can best use DevSpace when developing in Python!
+
+
+## DevSpace Init
+
+This example has walked through an already existing `devspace.yaml`. You can always create a `devspace.yaml` file 
+and drop it into any project you'd like, but if you prefer, you can also have DevSpace give you a headstart by using 
+the `devspace init` command.
+
+If you delete the `devspace.yaml` file from this directory and run `devspace init` you will be prompted with a few 
+questions that will help DevSpace set up your project.
+
+```shell
+$ devspace init
+
+
+     %########%
+     %###########%       ____                 _____
+         %#########%    |  _ \   ___ __   __ / ___/  ____    ____   ____ ___
+         %#########%    | | | | / _ \\ \ / / \___ \ |  _ \  / _  | / __// _ \
+     %#############%    | |_| |(  __/ \ V /  ____) )| |_) )( (_| |( (__(  __/
+     %#############%    |____/  \___|  \_/   \____/ |  __/  \__,_| \___\\___|
+ %###############%                                  |_|
+ %###########%
+
+
+info Detecting programming language...
+
+? Select the programming language of this project python
+
+? How do you want to deploy this project? kubectl
+
+? Please enter the paths to your Kubernetes manifests (comma separated, glob patterns are allowed, e.g. 'manifests/**' or 'kube/pod.yaml') [Enter to abort] manifests/**
+
+? Do you want to develop this project with DevSpace or just deploy it?  [Use arrows to move, type to filter] I want to develop this project and my current working dir contains the source code
+
+? Which image do you want to develop with DevSpace? 172.31.254.11/python-hello-devspace
+
+? How should DevSpace build the container image for this project? Use this existing Dockerfile: ./Dockerfile
+
+? Which port is your application listening on? (Enter to skip) 80
+
+done Project successfully initialized
+info Configuration saved in devspace.yaml - you can make adjustments as needed
+
+You can now run:
+1. devspace use namespace - to pick which Kubernetes namespace to work in
+2. devspace dev - to start developing your project in Kubernetes
+
+Run `devspace -h` or `devspace [command] -h` to see a list of available commands and flags
+```
+
+After running this command you will see a new `devspace.yaml` file as well as a `devspace_start.sh` -- these files 
+are intended to get you going, but you may want to modify some contents to better suit your needs. For example, the 
+default DevSpace file will replace our applications image with a development image (we'll cover this more in the 
+"slightly-fancier" example) which will not have had our requirements installed into it.
+
+To take the new `devspace.yaml` config for a spin you can simply run `devspace dev` just like before. Once your 
+container is up and running you can run the following commands to install your requirements and run the app in the 
+dev container:
+
+```shell
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 80
+```
+
+At this point your app will be running on `http://localhost:8080`!
+
+As you can see this is a pretty quick and easy way to get rolling with DevSpace!

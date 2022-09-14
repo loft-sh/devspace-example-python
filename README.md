@@ -25,4 +25,7 @@ Working with DevSpace in your Python (or any language) project? Here are a few o
 - Really into the Visual Studio Code Remote SSH Extension? Check out the docs about it [here](https://devspace.sh/docs/ide-integration/visual-studio-code)
 - Keep [this page](https://devspace.sh/docs/configuration/reference) handy -- it's always nice to have the full 
   DevSpace config reference at the ready!
+- If you, like us, commonly use the `ignoreContextChanges` image rebuild strategy, and you want to rebuild your 
+  image for whatever reason, just know you can tack on the `-b` flag to your normal `devspace -dev` to rebuild your 
+  images; easy to forget, but quite handy!
 - Join us on Slack [here](https://slack.loft.sh/) if you're into that sort of thing!

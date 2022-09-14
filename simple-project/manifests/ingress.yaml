@@ -1,0 +1,19 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devspace-example-python-simple-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: devspace-example-python-simple.devspace
+    http:
+      paths:
+      - backend:
+          service:
+            name: devspace-example-python-simple
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific

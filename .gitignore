@@ -1,5 +1,5 @@
 # dont track devspace caches
-*/.devspace
+*/*.devspace
 
 .DS_Store
 
@@ -8,3 +8,5 @@
 
 # vscode
 .vscode
+
+venv

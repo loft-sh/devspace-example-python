@@ -1,0 +1,51 @@
+version: v2beta1
+name: python-simple-project
+
+vars:
+  # make sure you have push/pull access to whatever registry you use!
+  REGISTRY: 172.31.254.11
+  DATABASE_IMAGE: ${REGISTRY}/python-simple-project-db
+  BACKEND_IMAGE: ${REGISTRY}/python-simple-project-backend
+  DEVSPACE_FLAGS: "-n python-simple-project"
+
+# Configuration to build a DevImage
+images:
+  database:
+    image: ${DATABASE_IMAGE}
+    context: ./database
+    dockerfile: ./database/Dockerfile
+    rebuildStrategy: ignoreContextChanges
+  backend:
+    image: ${BACKEND_IMAGE}
+    context: ./backend
+    dockerfile: ./backend/Dockerfile
+    rebuildStrategy: ignoreContextChanges
+
+# Configuration to deploy the application
+deployments:
+    simple-project:
+      kubectl:
+        manifests:
+          - manifests/deployment.yaml
+          - manifests/ingress.yaml
+          - manifests/svc.yaml
+
+# Configuration to start development -- what happens when we run `devspace dev`
+dev:
+  simple-project:
+    imageSelector: ${BACKEND_IMAGE}
+    ports:
+      - port: 3000:80
+    sync:
+      - path: ./backend/devspace_starwars_api/:/simple-project/devspace_starwars_api/
+    terminal:
+      command: uvicorn devspace_starwars_api.main:app --host 0.0.0.0 --port 80 --reload
+
+profiles:
+  - name: dev
+    patches:
+      # remove the service and ingress from the deployment manifests for the `simple-project` deployment
+      - op: remove
+        path: deployments.simple-project.kubectl.manifests[2]
+      - op: remove
+        path: deployments.simple-project.kubectl.manifests[1]
