@@ -89,10 +89,10 @@ build this image and push it somewhere, but now we can let DevSpace handle that 
 As for the pushing the image to *somewhere* thing -- you do need to be able to get this image to somewhere your 
 cluster can pull it from. If you are doing development locally on Minikube/Docker Desktop/something similar, you may 
 be able to simply build the image and have it be accessible from the cluster. But, what if you are doing development 
-on a remote cluster or a cluster spun up with k3d or similar? Well, we've got great news for you! Starting in 
-DevSpace 6.2.0, DevSpace will automatically spin up a registry adjacent to your pods that the parent Kubernetes 
-cluster will be able to pull images from! If for some reason you want to build/push to a different registry, check 
-out the next "simple-project" example where we'll show you how to do that as well.
+on a remote cluster or a cluster spun up with k3d or similar? Well, we've got great news for you! DevSpace will 
+automatically spin up a registry adjacent to your pods that the parent Kubernetes cluster will be able to pull 
+images from! If for some reason you want to build/push to a different registry, check out the next "simple-project" 
+example where we'll show you how to do that as well.
 
 The only thing left to do is to deploy our application into a Kubernetes cluster. In this case there is a very 
 simple `deployment.yaml` manifest to do just that. This manifest will create a simple deployment, deploying a single 
@@ -119,8 +119,7 @@ version: v2beta1
 name: python-hello-devspace
 
 vars:
-  REGISTRY: 172.31.254.11
-  IMAGE: ${REGISTRY}/python-hello-devspace
+  IMAGE: python-hello-devspace
   DEVSPACE_FLAGS: "-n python-hello-devspace"
 
 images:
@@ -150,9 +149,7 @@ This `devspace.yaml`, has four major sections that pretty much all your `devspac
 
 1. `vars`: not strictly mandatory, but certainly nice to have! This is where we can define some variables that we 
    will refer to throughout our DevSpace config. In this case we are setting:
-   - `REGISTRY`: a variable to define the registry we will be pushing our image to
-   - `IMAGE`: the name of the image we are building. You can also see here we can refer to our previously defined 
-     `REGISTRY` variable here in the value, pretty snazzy!
+   - `IMAGE`: the name of the image we are building. 
    - `DEVSPACE_FLAGS`: is a "special" variable that allows you to set any flags you would normally pass to the 
      DevSpace CLI as a variable -- in this case we are passing `-n python-hello-devspace` which will tell DevSpace 
      to deploy our application into the namespace `python-hello-devspace`
@@ -208,87 +205,9 @@ $ devspace dev
 info Using namespace 'python-hello-devspace'
 info Using kube context 'loft-vcluster_devspace-dev_devspace-dev_loft-cluster'
 build:hello-devspace Ensuring image pull secret for registry: 172.31.254.11...
-build:hello-devspace Building image '172.31.254.11/python-hello-devspace:bBrcmuC' with engine 'docker'
-build:hello-devspace Authenticating (172.31.254.11)...
-build:hello-devspace Authentication successful (172.31.254.11)
-Sending build context to Docker daemon  32.49MBocker daemon  557.1kB
-build:hello-devspace Step 1/7 : FROM python:3.10.7-slim
-build:hello-devspace  ---> fe16e9fa64e9
-build:hello-devspace Step 2/7 : WORKDIR /hello-devspace
-build:hello-devspace  ---> Running in 148fee4d150a
-build:hello-devspace  ---> 6d4f99b86dc0
-build:hello-devspace Step 3/7 : COPY ./requirements.txt /hello-devspace/requirements.txt
-build:hello-devspace  ---> 029c33d3c947
-build:hello-devspace Step 4/7 : RUN pip install --no-cache-dir --upgrade -r requirements.txt
-build:hello-devspace  ---> Running in 93b44f7f12e5
-build:hello-devspace Collecting fastapi==0.83.0
-build:hello-devspace   Downloading fastapi-0.83.0-py3-none-any.whl (55 kB)
-build:hello-devspace      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 55.3/55.3 kB 2.0 MB/s eta 0:00:00
-build:hello-devspace Collecting uvicorn==0.18.3
-build:hello-devspace   Downloading uvicorn-0.18.3-py3-none-any.whl (57 kB)
-build:hello-devspace      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.4/57.4 kB 9.7 MB/s eta 0:00:00
-build:hello-devspace Collecting starlette==0.19.1
-build:hello-devspace   Downloading starlette-0.19.1-py3-none-any.whl (63 kB)
-build:hello-devspace      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.3/63.3 kB 13.3 MB/s eta 0:00:00
-build:hello-devspace Collecting pydantic!=1.7,!=1.7.1,!=1.7.2,!=1.7.3,!=1.8,!=1.8.1,<2.0.0,>=1.6.2
-build:hello-devspace   Downloading pydantic-1.10.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.8 MB)
-build:hello-devspace      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 11.0 MB/s eta 0:00:00
-build:hello-devspace Collecting h11>=0.8
-build:hello-devspace   Downloading h11-0.13.0-py3-none-any.whl (58 kB)
-build:hello-devspace      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.2/58.2 kB 12.5 MB/s eta 0:00:00
-build:hello-devspace Collecting click>=7.0
-build:hello-devspace   Downloading click-8.1.3-py3-none-any.whl (96 kB)
-build:hello-devspace      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 96.6/96.6 kB 17.4 MB/s eta 0:00:00
-build:hello-devspace Collecting anyio<5,>=3.4.0
-build:hello-devspace   Downloading anyio-3.6.1-py3-none-any.whl (80 kB)
-build:hello-devspace      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.6/80.6 kB 18.0 MB/s eta 0:00:00
-build:hello-devspace Collecting typing-extensions>=4.1.0
-build:hello-devspace   Downloading typing_extensions-4.3.0-py3-none-any.whl (25 kB)
-build:hello-devspace Collecting sniffio>=1.1
-build:hello-devspace   Downloading sniffio-1.3.0-py3-none-any.whl (10 kB)
-build:hello-devspace Collecting idna>=2.8
-build:hello-devspace   Downloading idna-3.3-py3-none-any.whl (61 kB)
-build:hello-devspace      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.2/61.2 kB 23.8 MB/s eta 0:00:00
-build:hello-devspace Installing collected packages: typing-extensions, sniffio, idna, h11, click, uvicorn, pydantic, anyio, starlette, fastapi
-build:hello-devspace Successfully installed anyio-3.6.1 click-8.1.3 fastapi-0.83.0 h11-0.13.0 idna-3.3 pydantic-1.10.2 sniffio-1.3.0 starlette-0.19.1 typing-extensions-4.3.0 uvicorn-0.18.3
-build:hello-devspace WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
-build:hello-devspace  ---> 3f37855924c0
-build:hello-devspace Step 5/7 : COPY ./app /hello-devspace/app
-build:hello-devspace  ---> a7a38dbef1e9
-build:hello-devspace Step 6/7 : ENTRYPOINT ["uvicorn", "app.main:app"]
-build:hello-devspace  ---> Running in 1823304dd6fe
-build:hello-devspace  ---> 00168d63b275
-build:hello-devspace Step 7/7 : CMD ["--host", "0.0.0.0", "--port", "80"]
-build:hello-devspace  ---> Running in 1aa4e3cfa006
-build:hello-devspace  ---> 51e658ac8077
-build:hello-devspace Successfully built 51e658ac8077
-build:hello-devspace Successfully tagged 172.31.254.11/python-hello-devspace:bBrcmuC
-build:hello-devspace The push refers to repository [172.31.254.11/python-hello-devspace]
-build:hello-devspace 466a6652dc36: Preparing
-build:hello-devspace 1df9af4b4f60: Preparing
-build:hello-devspace 72eacc6e595e: Preparing
-build:hello-devspace 09cc373e9a1e: Preparing
-build:hello-devspace 1f3d56b29849: Preparing
-build:hello-devspace 4fd1b16d91ec: Preparing
-build:hello-devspace 1ca6974456cc: Preparing
-build:hello-devspace 630337cfb78d: Preparing
-build:hello-devspace 6485bed63627: Preparing
-build:hello-devspace 4fd1b16d91ec: Waiting
-build:hello-devspace 630337cfb78d: Waiting
-build:hello-devspace 6485bed63627: Waiting
-build:hello-devspace 1ca6974456cc: Waiting
-build:hello-devspace 1f3d56b29849: Layer already exists
-build:hello-devspace 4fd1b16d91ec: Layer already exists
-build:hello-devspace 1ca6974456cc: Layer already exists
-build:hello-devspace 630337cfb78d: Layer already exists
-build:hello-devspace 09cc373e9a1e: Pushed
-build:hello-devspace 6485bed63627: Layer already exists
-build:hello-devspace 466a6652dc36: Pushed
-build:hello-devspace 72eacc6e595e: Pushed
-build:hello-devspace 1df9af4b4f60: Pushed
-build:hello-devspace bBrcmuC: digest: sha256:e3bc3968c42e75fa4f2d52595ea26c464b5c8ac4a3d7ef02448b6647b4b52dc1 size: 2203
-build:hello-devspace Image pushed to registry (172.31.254.11)
-build:hello-devspace Done processing image '172.31.254.11/python-hello-devspace'
+
+< SNIP >
+
 deploy:hello-devspace Applying manifests with kubectl...
 deploy:hello-devspace deployment.apps/devspace-example-python-simple created
 deploy:hello-devspace Successfully deployed hello-devspace with kubectl
@@ -374,71 +293,3 @@ purge:hello-devspace Successfully deleted deployment hello-devspace
 
 And with that you've got the basics of DevSpace down. In the other examples we'll focus more on some DevSpace/Python 
 specifics, and how you can best use DevSpace when developing in Python!
-
-
-## DevSpace Init
-
-This example has walked through an already existing `devspace.yaml`. You can always create a `devspace.yaml` file 
-and drop it into any project you'd like, but if you prefer, you can also have DevSpace give you a headstart by using 
-the `devspace init` command.
-
-If you delete the `devspace.yaml` file from this directory and run `devspace init` you will be prompted with a few 
-questions that will help DevSpace set up your project.
-
-```shell
-$ devspace init
-
-
-     %########%
-     %###########%       ____                 _____
-         %#########%    |  _ \   ___ __   __ / ___/  ____    ____   ____ ___
-         %#########%    | | | | / _ \\ \ / / \___ \ |  _ \  / _  | / __// _ \
-     %#############%    | |_| |(  __/ \ V /  ____) )| |_) )( (_| |( (__(  __/
-     %#############%    |____/  \___|  \_/   \____/ |  __/  \__,_| \___\\___|
- %###############%                                  |_|
- %###########%
-
-
-info Detecting programming language...
-
-? Select the programming language of this project python
-
-? How do you want to deploy this project? kubectl
-
-? Please enter the paths to your Kubernetes manifests (comma separated, glob patterns are allowed, e.g. 'manifests/**' or 'kube/pod.yaml') [Enter to abort] manifests/**
-
-? Do you want to develop this project with DevSpace or just deploy it?  [Use arrows to move, type to filter] I want to develop this project and my current working dir contains the source code
-
-? Which image do you want to develop with DevSpace? 172.31.254.11/python-hello-devspace
-
-? How should DevSpace build the container image for this project? Use this existing Dockerfile: ./Dockerfile
-
-? Which port is your application listening on? (Enter to skip) 80
-
-done Project successfully initialized
-info Configuration saved in devspace.yaml - you can make adjustments as needed
-
-You can now run:
-1. devspace use namespace - to pick which Kubernetes namespace to work in
-2. devspace dev - to start developing your project in Kubernetes
-
-Run `devspace -h` or `devspace [command] -h` to see a list of available commands and flags
-```
-
-After running this command you will see a new `devspace.yaml` file as well as a `devspace_start.sh` -- these files 
-are intended to get you going, but you may want to modify some contents to better suit your needs. For example, the 
-default DevSpace file will replace our applications image with a development image (we'll cover this more in the 
-"slightly-fancier" example) which will not have had our requirements installed into it.
-
-To take the new `devspace.yaml` config for a spin you can simply run `devspace dev` just like before. Once your 
-container is up and running you can run the following commands to install your requirements and run the app in the 
-dev container:
-
-```shell
-pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port 80
-```
-
-At this point your app will be running on `http://localhost:8080`!
-
-As you can see this is a pretty quick and easy way to get rolling with DevSpace!

@@ -225,17 +225,16 @@ dev:
       - port: 3000:80
     sync:
       - path: ./backend/devspace_starwars_api/:/simple-project/devspace_starwars_api/
-        printLogs: true
         onUpload:
-          execRemote:
-            command: /simple-project/start-or-restart-uvicorn.sh
+          exec:
+            - command: /simple-project/start-or-restart-uvicorn.sh
 
     command: ["sleep"]
     args: ["1000000000"]
 ```
 
 You can see that not *much* has changed, but we do have a few differences here! Firstly, we are using the `onUpload.
-execRemote` option here to execute a command `/simple-project/start-or-restart-uvicorn.sh` each time DevSpace syncs 
+exec` option here to execute a command `/simple-project/start-or-restart-uvicorn.sh` each time DevSpace syncs 
 things to our container. This shell script is in the backend directory, you can check it out
  [here](backend/start-or-restart-uvicorn.sh); all it is doing is killing uvicorn if its running, and re-launching it 
 with our normal settings.
@@ -243,8 +242,7 @@ with our normal settings.
 The other thing we changed here is setting the containers entrypoint to `sleep 1000000000` -- we don't want our 
 entrypoint being what it is in the Dockerfile, because each time we kill the uvicorn process we would be killing pid 
 1 -- and thus killing the container. So, we'll just have the container sleep forever, or until we have DevSpace 
-clean it up. Finally, the `printLogs` setting you can set to whatever you want, but for now we'll set it to `true` 
-so you can watch the DevSpace debug logs while you are modifying files locally.
+clean it up. 
 
 With all that in place, you can run `devspace dev` (or `devspace purge && devspace dev` if you want to tidy things 
 up first). Once the initial sync is complete -- modify some Python files and you should see DevSpace printing 
