@@ -10,10 +10,10 @@ This repo is intended to help you get started with DevSpace generally, with Pyth
 In here you'll find four different examples, from the most basic "hello world", to more advanced setups including 
 more "difficult" dependencies (things with C/other dependencies), and debugging examples. Check them out below:
 
-1. [Hello, DevSpace!](./hello-devspace) -- Start here if you are just checking out DevSpace for the first time
-2. [Simple Project](./simple-project) -- Still simple, but a bit more "real life" than the hello world example!
-3. [Slightly Fancier 🎩](./slightly-fancier) -- Getting fancier! Multistage builds, some linting hooks, quite fancy!
-4. [🐛 With Debugging](./with-debugging) -- Throw in some debuggers for good measure!
+1. [Hello, DevSpace!](./01-simple) -- Start here if you are just checking out DevSpace for the first time
+2. [FastAPI and Tortoise Project](./02-fastapi-tortoise) -- A bit more "real life" of an example using FastAPI, 
+   Tortoise ORM, and a PostgreSQL database, oh, and Star Wars!
+3. [🐛 With Debugging](./03-debugging) -- Throw in some debuggers for good measure!
 
 
 ## Other Info!

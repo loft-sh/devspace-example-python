@@ -1,12 +1,12 @@
 version: v2beta1
-name: python-simple-project
+name: python-fastapi-tortoise
 
 vars:
   # make sure you have push/pull access to whatever registry you use!
   REGISTRY: 172.31.254.11
   DATABASE_IMAGE: ${REGISTRY}/python-simple-project-db
   BACKEND_IMAGE: ${REGISTRY}/python-simple-project-backend
-  DEVSPACE_FLAGS: "-n python-simple-project"
+  DEVSPACE_FLAGS: "-n python-fastapi-tortoise"
 
 # Configuration to build a DevImage
 images:

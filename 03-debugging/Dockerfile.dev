@@ -1,0 +1,15 @@
+FROM python:3.10.7-slim-bullseye
+
+RUN set -x && apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    ca-certificates wget jq procps curl vim iputils-ping && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY devspace_start.sh .
+
+WORKDIR /client
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade wheel pip setuptools
+RUN pip install --no-cache-dir --upgrade httpie
+RUN pip install --no-cache-dir --upgrade -r requirements.txt

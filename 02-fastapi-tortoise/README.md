@@ -93,7 +93,7 @@ In your normal workflow you could obviously just set the registry/image names ho
 just to make it easy for you to try out this example!
 
 
-# Enter DevSpace
+## Enter DevSpace
 
 The only changes to the `devspace.yaml` from the previous example are:
 
@@ -274,7 +274,7 @@ Once again, note that with uvicorn we can simply have it auto reload when it not
 handy to know that DevSpace can also help you achieve the same result even if your tooling does not support this!
 
 
-# Profiles
+## Profiles
 
 Another very handy feature of DevSpace is the ability to define *profiles* -- profiles are more or less what they 
 sound like: profiles (or settings) for different use cases. A common example would be to have a profile for "dev" 

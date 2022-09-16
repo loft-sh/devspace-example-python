@@ -1,11 +1,11 @@
 version: v2beta1
-name: python-hello-devspace
+name: python-simple
+
 vars:
-  # make sure you have push/pull access to whatever registry you use!
-  REGISTRY: 172.31.254.11
-  IMAGE: ${REGISTRY}/python-hello-devspace
+  IMAGE: python-hello-devspace
   # Specify devspace's default namespace
   DEVSPACE_FLAGS: "-n python-hello-devspace"
+
 # Configuration to build a DevImage
 images:
   hello-devspace:
@@ -15,6 +15,7 @@ images:
     # code. if you wanted to force a rebuild after updating requirements.txt (for example) you could do so by adding
     # the '-b' flag to your devspace dev command like: `devspace dev -b`
     rebuildStrategy: ignoreContextChanges
+
 # Configuration to deploy the application
 deployments:
   hello-devspace:
@@ -22,6 +23,7 @@ deployments:
     kubectl:
       manifests:
         - manifests/
+
 # Configuration to start development -- what happens when we run `devspace dev`
 dev:
   hello-devspace:

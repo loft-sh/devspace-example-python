@@ -1,6 +1,7 @@
 # dont track devspace caches
 .devspace/
 
+# macos stuff
 .DS_Store
 
 # jetbrains
@@ -9,4 +10,5 @@
 # vscode
 .vscode
 
+# dont track any venv dirs
 venv
