@@ -1,0 +1,41 @@
+version: v2beta1
+name: python-simple
+
+vars:
+  IMAGE: python-hello-devspace
+  # Specify devspace's default namespace
+  DEVSPACE_FLAGS: "-n python-hello-devspace"
+
+# Configuration to build a DevImage
+images:
+  hello-devspace:
+    image: ${IMAGE}
+    dockerfile: ./Dockerfile
+    # only rebuild when the *Dockerfile* itself has changed -- because we are already live-syncing our application
+    # code. if you wanted to force a rebuild after updating requirements.txt (for example) you could do so by adding
+    # the '-b' flag to your devspace dev command like: `devspace dev -b`
+    rebuildStrategy: ignoreContextChanges
+
+# Configuration to deploy the application
+deployments:
+  hello-devspace:
+    # simply deploy the manifest files in the manifests directory -- note that you can install helm charts also!
+    kubectl:
+      manifests:
+        - manifests/
+
+# Configuration to start development -- what happens when we run `devspace dev`
+dev:
+  hello-devspace:
+    # the image we are selecting for the subsequent settings to apply to
+    imageSelector: ${IMAGE}
+    # Start port forwarding from our local host port 3000 -> port 80 on our container
+    ports:
+      - port: 3000:80
+    # Start file sync -- in this case just sync the actual python bits
+    sync:
+      - path: ./app/:/hello-devspace/app/
+    terminal:
+      # because uvicorn supports auto reloading we don't need to do anything extra in devspace (but we could! and we
+      # will in the next demo), so just run uvicorn with the reload flag and get to developing!
+      command: uvicorn app.main:app --host 0.0.0.0 --port 80 --reload

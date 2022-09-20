@@ -1,0 +1,50 @@
+version: v2beta1
+name: python-debugging
+
+dependencies:
+  fastapi-tortoise:
+    path: ../02-fastapi-tortoise
+
+vars:
+  REGISTRY: 172.31.254.11
+  CLIENT_IMAGE: ${REGISTRY}/python-debugging-client
+  CLIENT_DEV_IMAGE: ${REGISTRY}/python-debugging-client-dev
+  DEVSPACE_FLAGS: "-n python-debugging"
+
+# Configuration to build a DevImage
+images:
+  client:
+    image: ${CLIENT_IMAGE}
+    context: ./
+    dockerfile: ./Dockerfile
+    rebuildStrategy: ignoreContextChanges
+  client-dev:
+    image: ${CLIENT_DEV_IMAGE}
+    context: ./
+    dockerfile: ./Dockerfile.dev
+    rebuildStrategy: ignoreContextChanges
+
+# Configuration to deploy the application
+deployments:
+    simple-project-client:
+      helm:
+        chart:
+          name: component-chart
+          repo: https://charts.devspace.sh
+        values:
+          containers:
+            - image: ${CLIENT_IMAGE}
+              env:
+              - name: NAMESPACE
+                value: ${DEVSPACE_NAMESPACE}
+
+# Configuration to start development -- what happens when we run `devspace dev`
+dev:
+  simple-project-client:
+    imageSelector: ${CLIENT_IMAGE}
+    devImage: ${CLIENT_DEV_IMAGE}
+    sync:
+      - path: ./client/:/client
+    terminal:
+      command: /devspace_start.sh
+    ssh: {}

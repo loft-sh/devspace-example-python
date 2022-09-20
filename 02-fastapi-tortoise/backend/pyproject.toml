@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devspace_starwars_api"
+dynamic = [
+    "version"
+]
+description = "Demo DevSpace with a StarWars twist!"
+requires-python = ">=3.10"
+authors = [
+    { name = "Loft.sh" },
+]
+dependencies = [
+    "uvicorn==0.18.3",
+    "fastapi>=0.83.0,<1.0.0",
+    "tortoise-orm[asyncpg]>=0.19.2,<1.0.0"
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "devspace_starwars_api.__version__" }

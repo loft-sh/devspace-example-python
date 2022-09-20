@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devspace-example-python-simple
+spec:
+  selector:
+    matchLabels:
+      app: devspace-example-python-simple
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: devspace-example-python-simple
+    spec:
+      containers:
+        - name: python-web-server
+          image: "172.31.254.11/python-simple-project-backend"
+          ports:
+            - containerPort: 80
+        - name: postgres-db
+          image: "172.31.254.11/python-simple-project-db"
